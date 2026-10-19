@@ -11,15 +11,41 @@ const ENVIAR_GIF = true;
 
 const suspeitaSpam = new Map();
 
+function desempacotar(message) {
+  if (!message) return message;
+  const wrappers = [
+    "ephemeralMessage",
+    "viewOnceMessage",
+    "viewOnceMessageV2",
+    "viewOnceMessageV2Extension",
+    "documentWithCaptionMessage",
+    "editedMessage",
+    "futureProofMessage",
+    "deviceSentMessage",
+    "associatedChildMessage"
+  ];
+  for (const w of wrappers) {
+    if (message[w]?.message) return desempacotar(message[w].message);
+  }
+  return message;
+}
+
 function textoDaMensagem(m) {
+  if (!m) return "";
   const tipo = getContentType(m);
   const c = m[tipo] || {};
   return (
+    m.conversation ||
     c.text ||
     c.caption ||
-    m.conversation ||
-    (tipo === "listResponseMessage" && c.title) ||
-    (tipo === "buttonsResponseMessage" && c.selectedDisplayText) ||
+    c.selectedDisplayText ||
+    c.selectedId ||
+    (tipo === "listResponseMessage" && (c.title || c.singleSelectReply?.selectedRowId)) ||
+    (tipo === "templateButtonReplyMessage" && c.selectedDisplayText) ||
+    (m.extendedTextMessage && m.extendedTextMessage.text) ||
+    (m.imageMessage && m.imageMessage.caption) ||
+    (m.videoMessage && m.videoMessage.caption) ||
+    (m.documentMessage && m.documentMessage.caption) ||
     ""
   );
 }
@@ -29,23 +55,25 @@ function contemLink(texto = "") {
 }
 
 async function responder(sock, chatId, msg, texto, tipo = "info") {
-  const opcoes = { quoted: msg };
+  const opcoes = msg?.key?.id ? { quoted: msg } : {};
   try {
-    if (ENVIAR_GIF && texto && texto.length <= LIMITE_TEXTO_GIF) {
-      const gif = gerarGifAnimado(tipo);
-      const enviado = await sock.sendMessage(chatId, { image: gif, caption: texto, mimetype: "image/gif" }, opcoes);
-      E.marcarEnviado(enviado?.key?.id);
-      return enviado;
-    }
     const enviado = await sock.sendMessage(chatId, { text: texto }, opcoes);
     E.marcarEnviado(enviado?.key?.id);
+    if (ENVIAR_GIF && texto && texto.length <= LIMITE_TEXTO_GIF) {
+      try {
+        const gif = gerarGifAnimado(tipo);
+        const extra = await sock.sendMessage(chatId, { image: gif, caption: "" });
+        E.marcarEnviado(extra?.key?.id);
+      } catch (_) {}
+    }
     return enviado;
   } catch (e) {
     try {
-      const enviado = await sock.sendMessage(chatId, { text: texto });
+      const enviado = await sock.sendMessage(chatId, { text: String(texto || "") });
       E.marcarEnviado(enviado?.key?.id);
       return enviado;
-    } catch (_) {
+    } catch (e2) {
+      console.error("[responder]", e2?.message || e?.message || e2);
       return null;
     }
   }
@@ -72,26 +100,57 @@ async function carregarMidia(msg, tipo) {
   return Buffer.concat(pedacos);
 }
 
+function limparTexto(texto) {
+  return String(texto || "")
+    .replace(/[\u200e\u200f\u202a-\u202e\u2066-\u2069\u00a0]/g, "")
+    .trim();
+}
+
+function jidDonoDoSock(sock) {
+  const id = sock.user?.id || "";
+  const lid = sock.user?.lid || "";
+  return {
+    jid: id ? jidNormalizedUser(id) : "",
+    lid: lid ? jidNormalizedUser(lid) : "",
+    numero: U.numeroDeJid(id)
+  };
+}
+
 async function tratarMensagem(sock, msg) {
   try {
-    if (!msg.message) return;
+    if (!msg || !msg.key) return;
+
     const chatId = msg.key.remoteJid;
     if (!chatId || chatId === "status@broadcast") return;
-    if (E.foiEnviadoPeloBot(msg.key.id)) return;
-    if (msg.message.protocolMessage || msg.message.reactionMessage) return;
+    if (msg.key.id && E.foiEnviadoPeloBot(msg.key.id)) return;
 
-    const tipo = getContentType(msg.message);
-    if (tipo === "senderKeyDistributionMessage" || tipo === "messageContextInfo") return;
+    const bruto = msg.message;
+    if (!bruto) return;
+    if (bruto.protocolMessage || bruto.reactionMessage || bruto.pollUpdateMessage) return;
+
+    const message = desempacotar(bruto) || bruto;
+    const tipo = getContentType(message);
+    if (!tipo || tipo === "senderKeyDistributionMessage" || tipo === "messageContextInfo") return;
+
+    msg.message = message;
 
     const isGrupo = chatId.endsWith("@g.us");
     const fromMe = !!msg.key.fromMe;
-    const meuJid = jidNormalizedUser(sock.user?.id || "");
-    const remetenteJid = fromMe
-      ? meuJid
-      : jidNormalizedUser(msg.key.participant || msg.key.remoteJid);
+    const eu = jidDonoDoSock(sock);
+    const remetenteBruto = fromMe
+      ? (msg.key.participantAlt || msg.key.participant || eu.jid || chatId)
+      : (msg.key.participantAlt || msg.key.participant || msg.key.remoteJidAlt || msg.key.remoteJid);
+    const remetenteJid = jidNormalizedUser(remetenteBruto || "");
+    const remetenteLid = String(remetenteBruto || "").includes("@lid") ? jidNormalizedUser(remetenteBruto) : "";
 
-    const texto = textoDaMensagem(msg.message);
-    const isDono = U.ehDono(remetenteJid);
+    const texto = limparTexto(textoDaMensagem(message));
+    const isDono =
+      fromMe ||
+      U.ehDono(remetenteJid) ||
+      U.ehDono(msg.key.participant) ||
+      U.ehDono(msg.key.participantAlt) ||
+      U.ehDono(msg.key.remoteJidAlt) ||
+      !!(eu.lid && remetenteLid && eu.lid === remetenteLid);
 
     const extras = DB.extras();
     if (!isDono && (extras.bloqueados || []).includes(U.numeroDeJid(remetenteJid))) return;
@@ -115,7 +174,7 @@ async function tratarMensagem(sock, msg) {
 
     const prefixos = DB.extras().prefixos || PREFIXOS;
     const primeiro = texto ? texto[0] : "";
-    const temPrefixo = prefixos.includes(primeiro);
+    const temPrefixo = prefixos.includes(primeiro) || "/!.#／！．＃".includes(primeiro);
 
     let dadosGrupo = null;
     let ativo = true;
@@ -142,12 +201,21 @@ async function tratarMensagem(sock, msg) {
     const [nomeComando, ...argumentos] = semPrefixo.split(/\s+/);
     const comando = (nomeComando || "").toLowerCase();
     if (!comando) return;
+    console.log(`[cmd] /${comando} grupo=${isGrupo} dono=${isDono} fromMe=${fromMe} chat=${chatId} de=${remetenteJid}`);
 
     const def = comandos.buscar(comando);
-    if (!def) return;
-
-    if (isGrupo && !ativo && !isDono && !def.dono) {
+    if (!def) {
+      if (isDono || !isGrupo) {
+        await responder(sock, chatId, msg, `Comando /${comando} nao existe. Use /menu para ver a lista.`, "aviso");
+      }
       return;
+    }
+
+    if (isGrupo && !ativo && isDono) {
+      ativo = true;
+    }
+    if (isGrupo && !ativo && !def.dono) {
+      return responder(sock, chatId, msg, "Este grupo ainda nao foi ativado.\nDono: envie /addgrupo 30 dias (ou /addgrupo permanente).", "aviso");
     }
 
     let metadados = null;
@@ -155,11 +223,24 @@ async function tratarMensagem(sock, msg) {
     let botAdmin = false;
 
     if (isGrupo) {
-      metadados = await E.metadados(sock, chatId);
+      try {
+        metadados = await E.metadados(sock, chatId);
+      } catch (e) {
+        console.error("[meta]", e?.message || e);
+        metadados = { participants: [] };
+      }
       const participantes = metadados.participants || [];
-      const eu = participantes.find((p) => jidNormalizedUser(p.id) === meuJid);
-      botAdmin = !!(eu && (eu.admin === "admin" || eu.admin === "superadmin"));
-      const euP = participantes.find((p) => jidNormalizedUser(p.id) === remetenteJid);
+      const euPart = participantes.find((p) => {
+        const pid = jidNormalizedUser(p.id || "");
+        const pphone = jidNormalizedUser(p.phoneNumber || p.jid || "");
+        return pid === eu.jid || pid === eu.lid || pphone === eu.jid || U.ehDono(pid) || U.ehDono(pphone);
+      });
+      botAdmin = !!(euPart && (euPart.admin === "admin" || euPart.admin === "superadmin"));
+      const euP = participantes.find((p) => {
+        const pid = jidNormalizedUser(p.id || "");
+        const pphone = jidNormalizedUser(p.phoneNumber || p.jid || "");
+        return pid === remetenteJid || pphone === remetenteJid || pid === remetenteLid;
+      });
       isAdmin = isDono || !!(euP && (euP.admin === "admin" || euP.admin === "superadmin"));
     }
 

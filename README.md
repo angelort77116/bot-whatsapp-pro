@@ -15,7 +15,8 @@ Roda no seu proprio numero: **+55 65 9351-1752**.
 - Comandos de **DONO** (addgrupo, delgrupo, broadcast, donos, bloqueios...)
 - **Imagem animada (GIF)** em cada resposta, com tema diferente por tipo de mensagem
 - `/d` apaga a mensagem respondida (bot precisa ser admin)
-- Painel web em `http://localhost:PORT` com QR Code para conectar
+- Painel web em `http://localhost:PORT` com **codigo de pareamento**
+- Notificacao no WhatsApp do dono quando o bot conecta
 - Dados salvos em JSON (`dados/`)
 
 ## Requisitos
@@ -34,11 +35,22 @@ npm install
 npm start
 ```
 
-Na primeira vez, um QR Code aparece no terminal (e tambem em `http://localhost:3000`).
-No celular com o numero **556593511752**:
-WhatsApp > Aparelhos conectados > Conectar aparelho > leia o QR.
+Para gerar um **codigo de pareamento novo** (recomendado a cada vez que for conectar):
 
-Depois de conectado, a sessao fica salva na pasta `sessao/` e nao precisa ler o QR novamente.
+```bash
+NOVO_PAREAMENTO=1 npm start
+```
+
+O codigo aparece no terminal e em `http://localhost:3000`.
+No celular com o numero **556593511752**:
+
+1. WhatsApp > Aparelhos conectados > Conectar um aparelho
+2. Conectar com numero de telefone
+3. Digite o codigo de 8 caracteres (ex: `ABCD-1234`)
+
+Depois de conectado, o bot envia uma mensagem no seu WhatsApp avisando que esta no ar.
+
+Repo: https://github.com/angelort77116/bot-whatsapp-pro
 
 ## Como adicionar um grupo
 
@@ -76,10 +88,10 @@ Depois de conectado, a sessao fica salva na pasta `sessao/` e nao precisa ler o 
 
 Lista completa: arquivo `comandos.txt`.
 
-## Painel / QR Code
+## Painel / codigo de pareamento
 
-Com o bot rodando, abra `http://localhost:3000` para ver o status e o QR Code
-(endpoint `/qr` entrega a imagem do QR).
+Com o bot rodando, abra `http://localhost:3000` para ver o codigo de pareamento.
+Endpoint `/status` devolve JSON (`online`, `pairing`, `numero`).
 
 ## Configuracao
 
@@ -97,6 +109,7 @@ Variavel de ambiente:
 
 - O bot usa a biblioteca **Baileys** (nao oficial). Use com uma conta que voce controla.
 - Nao exponha a pasta `sessao/` (contem a credencial da sua conta).
+- O pareamento usa o numero do dono em `config.js` (`DONO_NUMERO`).
 - Comandos de "downloads" (`/cep`, `/cnpj`, `/clima`, `/moeda`, `/feriados`, `/bancos`,
   `/traduzir`, `/ip`, `/encurtar`) usam APIs publicas gratuitas e exigem internet.
 - Tudo tem tratamento de erro: se uma API externa falhar, o bot responde com uma

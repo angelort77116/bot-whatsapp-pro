@@ -4,6 +4,28 @@ const cacheMeta = new Map();
 const ultimaMensagem = new Map();
 const mute = new Map();
 
+const conexao = {
+  pareamento: null,
+  conectado: false,
+  numero: null,
+  erro: null
+};
+
+function setPareamento(codigo) {
+  conexao.pareamento = codigo ? String(codigo).replace(/[^A-Z0-9]/gi, "").toUpperCase() : null;
+  conexao.erro = null;
+}
+
+function setConectado(valor, numero = null) {
+  conexao.conectado = !!valor;
+  if (valor) conexao.pareamento = null;
+  if (numero) conexao.numero = numero;
+}
+
+function setErroConexao(msg) {
+  conexao.erro = msg || null;
+}
+
 function marcarEnviado(id) {
   if (!id) return;
   idsEnviados.add(id);
@@ -74,5 +96,9 @@ module.exports = {
   setMute,
   estaMudo,
   desmutar,
-  ultimaMensagem
+  ultimaMensagem,
+  conexao,
+  setPareamento,
+  setConectado,
+  setErroConexao
 };

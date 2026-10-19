@@ -9,6 +9,10 @@ if [ ! -d node_modules ]; then
 fi
 
 echo "Iniciando o Bot Pro..."
-echo "Painel/QR: http://localhost:${PORT:-3000}"
+echo "Painel/codigo: http://localhost:${PORT:-3000}"
+
+if [ "${NOVO_PAREAMENTO:-0}" = "1" ]; then
+  echo "Gerando NOVO codigo de pareamento..."
+fi
 
 exec node index.js

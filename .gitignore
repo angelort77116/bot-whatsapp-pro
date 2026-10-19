@@ -177,6 +177,8 @@
 
 # WhatsApp Bot - sessao e dados locais (NUNCA commitar credenciais)
 sessao/
+sessao-antiga-*/
 dados/
 qrcode.txt
+pareamento.txt
 *.session

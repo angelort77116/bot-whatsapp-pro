@@ -13,12 +13,22 @@ function jidDeNumero(numero) {
   return `${apenasDigitos(numero)}@s.whatsapp.net`;
 }
 
+function mesmaPessoa(a, b) {
+  const x = apenasDigitos(a);
+  const y = apenasDigitos(b);
+  if (!x || !y) return false;
+  if (x === y) return true;
+  const curto = x.length < y.length ? x : y;
+  const longo = x.length < y.length ? y : x;
+  return curto.length >= 10 && longo.endsWith(curto);
+}
+
 function ehDono(jid) {
   const n = numeroDeJid(jid);
-  if (n === DONO_NUMERO) return true;
-  if (DONOS_ADICIONAIS.map(apenasDigitos).includes(n)) return true;
+  if (mesmaPessoa(n, DONO_NUMERO)) return true;
+  if (DONOS_ADICIONAIS.some((d) => mesmaPessoa(n, d))) return true;
   const extras = DB.extras();
-  return (extras.donos || []).map(apenasDigitos).includes(n);
+  return (extras.donos || []).some((d) => mesmaPessoa(n, d));
 }
 
 function sleep(ms) {
@@ -107,6 +117,7 @@ module.exports = {
   apenasDigitos,
   numeroDeJid,
   jidDeNumero,
+  mesmaPessoa,
   ehDono,
   sleep,
   escolher,
