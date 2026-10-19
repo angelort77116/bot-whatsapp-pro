@@ -1,0 +1,414 @@
+# 264 COMANDOS - um por linha
+# Prefixo padrao: /
+
+## INFO (30)
+/menu - Mostra todos os comandos
+  aliases: /help, /ajuda, /comandos
+/ping - Testa a latencia do bot
+/infobot - Informacoes do bot
+/versao - Versao do bot
+  aliases: /version
+/id - Mostra IDs da conversa
+  aliases: /ids
+/meuid - Mostra seu ID
+  aliases: /meuid
+/idgrupo - Mostra o ID do grupo [GRUPO]
+/meunumero - Mostra seu numero
+/dono - Contato do dono
+  aliases: /owner
+/horario - Hora atual
+  aliases: /hora
+/data - Data atual
+/datahora - Data e hora atuais
+/runtime - Tempo ligado
+  aliases: /uptime
+/sistema - Informacoes do sistema
+/statusbot - Status do bot
+/perfil - Seu perfil
+  aliases: /meu-perfil
+/meunivel - Seu nivel
+  aliases: /nivel
+/ranking - Top usuarios por XP
+  aliases: /top
+/regras - Regras do grupo [GRUPO]
+/creditos - Creditos do bot
+/reportar - Reportar algo ao dono
+/sugestao - Enviar sugestao ao dono
+  aliases: /sugerir
+/convite - Link para adicionar o bot
+  aliases: /linkbot
+/velocidade - Velocidade de resposta
+  aliases: /speed
+/eu - Detalhes de voce na conversa
+/grupoinfo - Informacoes do grupo [GRUPO]
+/admins - Lista admins do grupo [GRUPO]
+/listamembros - Lista membros do grupo [GRUPO]
+/meunome - Seu nome no WhatsApp
+/tamanhotexto - Conta caracteres do texto
+
+## GRUPO (18)
+/statusgp - Tempo de ativacao do grupo [GRUPO]
+  aliases: /ativogp, /checkgp
+/niveisgp - Ranking de niveis no grupo [GRUPO]
+  aliases: /rankgp
+/membrosgp - Lista membros com indice [GRUPO]
+  aliases: /membros
+/adminlist - Lista os admins [GRUPO]
+  aliases: /admlist
+/denunciar - Denuncia um membro aos admins [GRUPO]
+/pediradmin - Pede para ser promovido a admin [GRUPO]
+/sugestaogp - Envia sugestao ao grupo [GRUPO]
+  aliases: /sugerirgp
+/daily - Resgata XP diario
+  aliases: /diario
+/trabalhar - Ganha XP trabalhando
+  aliases: /work
+/apostar - Aposta XP num 50/50
+  aliases: /bet
+/pontos - Mostra seus XP
+  aliases: /xp, /saldo
+/presentear - Transfere XP para alguem
+  aliases: /transferir, /doar
+/nivelgp - Progresso de nivel do grupo [GRUPO]
+/batalha - Batalha entre dois membros marcados [GRUPO]
+/duelo - Duelo de XP entre dois membros [GRUPO]
+/minhavip - Verifica acesso VIP [GRUPO]
+/progresso - Mostra progresso para o proximo nivel
+  aliases: /nivelinfo
+/meuidgp - Seu ID neste grupo [GRUPO]
+
+## ADMIN (37)
+/abrir - Abre o grupo (todos falam) [ADMIN,GRUPO,BOT-ADMIN]
+  aliases: /desmutargrupo
+/fechar - Fecha o grupo (so admins falam) [ADMIN,GRUPO,BOT-ADMIN]
+  aliases: /mutargrupo
+/promover - Promove membro a admin [ADMIN,GRUPO,BOT-ADMIN]
+  aliases: /promote
+/rebaixar - Remove admin de um membro [ADMIN,GRUPO,BOT-ADMIN]
+  aliases: /demote
+/banir - Remove um membro do grupo [ADMIN,GRUPO,BOT-ADMIN]
+  aliases: /expulsar, /remover, /kick, /ban
+/adicionar - Adiciona um membro ao grupo [ADMIN,GRUPO,BOT-ADMIN]
+  aliases: /addmembro
+/antilink - Liga/desliga o antilink [ADMIN,GRUPO]
+/antispam - Liga/desliga o antispam [ADMIN,GRUPO]
+/antifake - Liga/desliga o antifake [ADMIN,GRUPO]
+/bemvindo - Liga/desliga boas-vindas [ADMIN,GRUPO]
+  aliases: /welcome
+/adeus - Liga/desliga despedida [ADMIN,GRUPO]
+  aliases: /despedida
+/setbemvindo - Define a mensagem de boas-vindas [ADMIN,GRUPO]
+/setadeus - Define a mensagem de despedida [ADMIN,GRUPO]
+/setregras - Define as regras do grupo [ADMIN,GRUPO]
+/addpalavra - Adiciona palavra proibida [ADMIN,GRUPO]
+  aliases: /addproibida
+/delpalavra - Remove palavra proibida [ADMIN,GRUPO]
+  aliases: /delproibida
+/listarpalavras - Lista palavras proibidas [ADMIN,GRUPO]
+  aliases: /palavras
+/marcar - Marca todos os membros [ADMIN,GRUPO]
+  aliases: /todos, /marcartodos, /@todos
+/link - Obtem o link de convite do grupo [ADMIN,GRUPO,BOT-ADMIN]
+  aliases: /linkgp, /convitegrupo
+/revogar - Revoga o link de convite atual [ADMIN,GRUPO,BOT-ADMIN]
+  aliases: /revogarlink, /novolink
+/setnome - Muda o nome do grupo [ADMIN,GRUPO,BOT-ADMIN]
+  aliases: /nomedogrupo
+/setdesc - Muda a descricao do grupo [ADMIN,GRUPO,BOT-ADMIN]
+  aliases: /descricao
+/warn - Adverte um membro [ADMIN,GRUPO]
+  aliases: /advertir
+/unwarn - Remove uma advertencia [ADMIN,GRUPO]
+/resetwarn - Zera as advertencias de um membro [ADMIN,GRUPO]
+/listwarn - Lista advertencias do grupo [ADMIN,GRUPO]
+  aliases: /avisos, /listaravisos
+/setmaxwarn - Define o maximo de avisos [ADMIN,GRUPO]
+/mute - Silencia um membro por X minutos [ADMIN,GRUPO]
+  aliases: /silenciar
+/desmute - Remove o silencio de um membro [ADMIN,GRUPO]
+  aliases: /dessilenciar
+/enquete - Cria uma enquete [ADMIN,GRUPO]
+  aliases: /votacao, /poll
+/d - Apaga a mensagem respondida [ADMIN,GRUPO,BOT-ADMIN]
+  aliases: /apagar, /delete
+/dclear - Apaga as ultimas N mensagens do bot [ADMIN,GRUPO,BOT-ADMIN]
+  aliases: /limpar
+/marcaradmins - Marca apenas os admins [ADMIN,GRUPO]
+  aliases: /adms
+/promovertodos - Promove varios membros marcados [ADMIN,GRUPO,BOT-ADMIN]
+/rebaixartodos - Rebaixa varios membros marcados [ADMIN,GRUPO,BOT-ADMIN]
+/aceitarlink - Permite membros verem o link [ADMIN,GRUPO]
+/negar - Restringe o link apenas a admins [ADMIN,GRUPO]
+
+## DONO (31)
+/addgrupo - Ativa um grupo por X dias ou permanente [DONO]
+  aliases: /addgp, /ativargrupo
+/addgrupo-vip - Ativa um grupo como VIP por X dias ou permanente [DONO]
+  aliases: /addvipgrupo, /vipgrupo
+/renovargrupo - Renova o tempo de um grupo ativo [DONO]
+  aliases: /renovar
+/tornarpermanente - Deixa o grupo permanente [DONO]
+/delgrupo - Desativa um grupo [DONO]
+  aliases: /removegrupo, /desativargrupo, /removergrupo
+/listargrupos - Lista grupos ativos [DONO]
+  aliases: /grupos, /listagrupo
+/infogrupo - Detalhes de um grupo ativo [DONO]
+  aliases: /detalhesgrupo
+/setvip - Torna o grupo VIP por X tempo [DONO]
+  aliases: /vipset
+/remvip - Remove o VIP do grupo [DONO]
+  aliases: /delvip
+/addvip - Da VIP a um usuario por X tempo [DONO]
+  aliases: /addvipuser
+/remvipuser - Remove VIP de um usuario [DONO]
+  aliases: /delvipuser
+/listarvip - Lista VIPs (grupos e usuarios) [DONO]
+  aliases: /vips
+/adddono - Adiciona um dono adicional [DONO]
+/remdono - Remove um dono adicional [DONO]
+/listardono - Lista donos [DONO]
+  aliases: /donos
+/block - Bloqueia um usuario do bot [DONO]
+  aliases: /bloquear
+/unblock - Desbloqueia um usuario [DONO]
+  aliases: /desbloquear
+/listablock - Lista bloqueados [DONO]
+  aliases: /bloqueados
+/setprefix - Define os prefixos do bot [DONO]
+/setnomebot - Muda o nome do bot [DONO]
+/config - Mostra configuracoes atuais [DONO]
+/broadcast - Envia mensagem a todos os grupos ativos [DONO]
+  aliases: /avisartodos
+/sair - Faz o bot sair do grupo [DONO]
+  aliases: /sairgrupo
+/entrar - Entra em um grupo por link [DONO]
+  aliases: /join
+/sincronizar - Lista todos os grupos que o bot participa [DONO]
+  aliases: /meusgrupos
+/salvardb - Salva o banco de dados em disco [DONO]
+  aliases: /salvar
+/limpargrupo - Reseta as configuracoes do grupo atual [DONO]
+  aliases: /resetgrupo
+/forcerrank - Mostra o ranking interno [DONO]
+/resetxp - Zera o XP de um usuario [DONO]
+/addxp - Adiciona XP a um usuario [DONO]
+/dadoinv - Mostra o tamanho do banco de dados [DONO]
+
+## VIP (15)
+/vipmenu - Lista os comandos VIP [VIP]
+  aliases: /vipajuda
+/vipstatus - Mostra seu status VIP [VIP]
+  aliases: /meuvip
+/sorteio - Sorteia um membro do grupo [VIP,GRUPO]
+  aliases: /sortear
+/rifa - Sorteia um numero da rifa [VIP]
+/megasorteio - Sorteia 3 membros do grupo [VIP,GRUPO]
+/superdado - Rola um dado de 100 lados [VIP]
+/vipbroadcast - Envia um aviso VIP no grupo [VIP,GRUPO]
+/vipsorte - Sorte/destino premium [VIP]
+/vipelogio - Elogio premium [VIP]
+/vipcontador - Contagem regressiva no grupo [VIP,GRUPO]
+  aliases: /contagem
+/vipanimacao - Envia uma animacao aleatoria [VIP]
+/vipfoto - Envia um cartao VIP animado [VIP]
+/vipestatisticas - Estatisticas avancadas do bot [VIP]
+  aliases: /vipstats
+/vipprioridade - Confirma sua prioridade VIP [VIP]
+  aliases: /prioridade
+/vipmodo - Ativa o modo destaque do grupo [ADMIN,VIP,GRUPO]
+
+## DIVERSAO (67)
+/dado - Rola um dado de 6 lados
+  aliases: /d6
+/d20 - Rola um dado de 20 lados
+/moeda - Cara ou coroa
+  aliases: /caraoucoroa
+/jokenpo - Pedra, papel ou tesoura
+  aliases: /ppt
+/parouimpar - Par ou impar
+  aliases: /pi
+/roletarussa - Roleta russa
+/bingo - Sorteia um numero de bingo
+/frase - Frase motivacional
+/conselho - Conselho do dia
+/piada - Conta uma piada
+/elogio - Elogia alguem
+/cantada - Lanca uma cantada
+/cantada2 - Mais cantadas
+/gado - Mugido de gado
+/fofoca - Solta uma fofoca
+/previsao - Previsao do dia
+/signo - Seu signo
+/animal - Seu animal espiritual
+/comida - Comida da sua personalidade
+/superpoder - Seu superpoder
+/apelido - Seu apelido
+/musica - Musica recomendada
+/filme - Filme recomendado
+/serie - Serie recomendada
+/jogo - Jogo recomendado
+/time - Time recomendado
+/bomdia - Manda bom dia
+/boatarde - Manda boa tarde
+/boanoite - Manda boa noite
+/tchau - Manda tchau
+/parabens - Manda parabens
+/abraco - Manda um abraco
+  aliases: /hug
+/beijo - Manda um beijo
+  aliases: /kiss
+/tapa - Manda um tapa
+  aliases: /slap
+/carinho - Manda carinho
+/cafune - Manda cafune
+/morder - Morde alguem
+/soco - Da um soco (brincadeira)
+/aplica - Da um tapa de luva
+/lutar - Luta com alguem
+/namorar - Pede em namoro
+/divorciar - Divorcia de alguem
+/ciumes - Fica com ciumes
+/reviver - Revive alguem
+  aliases: /revive
+/dancar - Convida para dancar
+/dormir - Manda dormir
+/ship - Shipa dois membros
+  aliases: /casal
+/amar - Quanto voce ama alguem
+/odiar - Quanto voce odeia alguem
+/beleza - Nota de beleza
+/inteligencia - Nota de inteligencia
+/nota - Nota geral de alguem
+/sorte - Sua sorte hoje
+/gado-nivel - Nivel de gado
+  aliases: /gadometro
+/sinceridade - Nivel de sinceridade
+/louco - Nivel de loucura
+  aliases: /loucura
+/cafe - Nivel de vicio em cafe
+/adivinha - Adivinhacao
+/curiosidade - Curiosidade aleatoria
+/motivacional - Frase motivacional
+/escolha - Escolha para voce
+/simounao - Resposta de sim ou nao
+/risada - Ri de algo
+/chorao - Drama
+/dado-duplo - Rola dois dados
+  aliases: /2d6
+/numero - Sorteia um numero no intervalo
+  aliases: /rand
+/roleta - Roleta da sorte
+
+## FERRAMENTAS (45)
+/calcular - Calcula uma expressao matematica
+  aliases: /calc, /conta
+/somar - Soma dois numeros
+  aliases: /soma
+/subtrair - Subtrai dois numeros
+/multiplicar - Multiplica dois numeros
+  aliases: /multi
+/dividir - Divide dois numeros
+/media - Media de varios numeros
+/porcentagem - Calcula porcentagem
+  aliases: /pct
+/fatorial - Fatorial de um numero
+/primo - Verifica se e primo
+/raiz - Raiz quadrada
+/potencia - Potencia de um numero
+  aliases: /pot
+/tabuada - Tabuada de um numero
+/inverter - Inverte um texto
+  aliases: /reverse
+/maiuscula - Converte para MAIUSCULA
+  aliases: /upper
+/minuscula - Converte para minuscula
+  aliases: /lower
+/capitalizar - Capitaliza o texto
+/contarpalavras - Conta palavras
+  aliases: /palavras
+/contarcaracteres - Conta caracteres
+  aliases: /len
+/vogais - Conta as vogais
+/consoantes - Conta as consoantes
+/palindromo - Verifica se e palindromo
+/binario - Converte texto em binario
+/hex - Converte texto em hexadecimal
+/base64 - Codifica em base64
+  aliases: /b64
+/base64d - Decodifica base64
+  aliases: /unbase64
+/morse - Converte texto em morse
+/removerespacos - Remove espacos do texto
+/repetir - Repete um texto N vezes
+/gerarsenha - Gera uma senha forte
+  aliases: /senha
+/uuid - Gera um UUID
+/timestamp - Timestamp atual
+/sortear - Sorteia entre opcoes (separe por virgula)
+/imc - Calcula o IMC
+/romanos - Converte numero para romano
+/anagrama - Embaralha as letras
+/primeiraletra - Primeira letra do texto
+/ultimaletra - Ultima letra do texto
+/cor - Converte hex para RGB
+/afk - Marca voce como ausente
+  aliases: /ausente
+/voltar - Remove o status AFK
+  aliases: /naoafk
+/anotar - Cria uma anotacao
+  aliases: /nota
+/notas - Lista suas anotacoes
+  aliases: /minhasnotas
+/apagarnota - Apaga uma anotacao
+  aliases: /delnota
+/lembrar - Cria um lembrete em minutos
+  aliases: /lembrete
+/invertersimbolo - Deixa o texto de cabeca para baixo
+  aliases: /flip
+
+## MIDIA (10)
+/sticker - Transforma imagem/video em figurinha
+  aliases: /figurinha, /fig, /s
+/toimg - Transforma figurinha em imagem
+  aliases: /toimage, /fig2img, /imagem
+/viewonce - Revela midia de visualizacao unica
+  aliases: /revelar, /vo, /veronce
+/qr - Gera um QR Code
+  aliases: /qrcode, /gerarqr
+/fotogrupo - Define a foto do grupo (responda a imagem) [ADMIN,GRUPO,BOT-ADMIN]
+  aliases: /setfoto
+/redimensionar - Redimensiona uma imagem (responda)
+  aliases: /resize
+/girar - Gira uma imagem (responda)
+  aliases: /rotacionar
+/cinza - Deixa a imagem em preto e branco
+  aliases: /pb, /grayscale
+/desfoque - Aplica desfoque na imagem
+  aliases: /blur
+/negativo - Inverte as cores da imagem
+  aliases: /invert
+
+## DOWNLOADS (11)
+/baixarmidia - Baixa uma midia de um link direto
+  aliases: /baixar, /dl
+/encurtar - Encurta uma URL
+  aliases: /short, /tinyurl
+/cep - Consulta um CEP
+  aliases: /viacep, /consultarcep
+/clima - Mostra o clima de uma cidade
+  aliases: /tempo, /weather
+/moeda - Converte moedas
+  aliases: /cambio, /convertermoeda
+/ip - Consulta informacoes de um IP
+  aliases: /ipinfo
+/ddd - Lista DDDs de um estado
+  aliases: /ddds
+/traduzir - Traduz um texto (pt<->en)
+  aliases: /translate
+/feriados - Feriados nacionais de um ano
+  aliases: /feriado
+/bancos - Lista bancos brasileiros
+  aliases: /listabancos
+/cnpj - Consulta um CNPJ
+  aliases: /consultarcnpj
+

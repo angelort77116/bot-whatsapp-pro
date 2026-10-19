@@ -1,0 +1,27 @@
+{
+  "name": "whatsapp-bot-pro",
+  "version": "1.0.0",
+  "description": "Bot de WhatsApp para grupos com 180+ comandos, sistema VIP, dono e adicionar grupo com expiracao.",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js",
+    "lint": "node --check index.js && node -e \"require('./src/commands')\"",
+    "listar": "node scripts/listar-comandos.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@hapi/boom": "^10.0.1",
+    "@whiskeysockets/baileys": "^6.7.9",
+    "gifenc": "^1.0.3",
+    "pino": "^9.5.0",
+    "qrcode": "^1.5.4",
+    "qrcode-terminal": "^0.12.0",
+    "sharp": "^0.35.5"
+  },
+  "author": "Dono",
+  "license": "MIT"
+}

@@ -174,3 +174,9 @@
 *.lz
 *.lzma
 *.iso
+
+# WhatsApp Bot - sessao e dados locais (NUNCA commitar credenciais)
+sessao/
+dados/
+qrcode.txt
+*.session
