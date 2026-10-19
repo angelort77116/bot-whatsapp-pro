@@ -4,7 +4,8 @@ const {
   DisconnectReason,
   fetchLatestBaileysVersion,
   Browsers,
-  makeCacheableSignalKeyStore
+  makeCacheableSignalKeyStore,
+  delay
 } = require("@whiskeysockets/baileys");
 const P = require("pino");
 const fs = require("fs");
@@ -22,7 +23,8 @@ if (!fs.existsSync(PASTA_DADOS)) fs.mkdirSync(PASTA_DADOS, { recursive: true });
 let tentativas = 0;
 let pareando = false;
 let avisoEnviado = false;
-let iniciando = false;
+let reconectando = false;
+let sessaoArquivadaNesteBoot = false;
 
 function formatarCodigo(codigo) {
   const limpo = String(codigo || "").replace(/[^A-Z0-9]/gi, "").toUpperCase();
@@ -58,7 +60,8 @@ async function pedirPareamento(sock) {
   if (sock.authState?.creds?.registered) return;
   pareando = true;
   try {
-    await new Promise((r) => setTimeout(r, 2000));
+    await delay(3000);
+    if (sock.authState?.creds?.registered) return;
     const bruto = await sock.requestPairingCode(DONO_NUMERO);
     const codigo = formatarCodigo(bruto);
     E.setPareamento(codigo);
@@ -68,16 +71,16 @@ async function pedirPareamento(sock) {
     console.log("==============================================");
     console.log(`\n  NUMERO: +${DONO_NUMERO}`);
     console.log(`  CODIGO: ${codigo}\n`);
-    console.log("No WhatsApp:");
-    console.log("  Aparelhos conectados > Conectar um aparelho");
-    console.log("  > Conectar com numero de telefone");
-    console.log(`  Digite o codigo: ${codigo}\n`);
+    console.log("No WhatsApp (rapido, o codigo vale poucos minutos):");
+    console.log("  1. Aparelhos conectados");
+    console.log("  2. Conectar um aparelho");
+    console.log("  3. Conectar com numero de telefone");
+    console.log(`  4. Digite: ${codigo}\n`);
     console.log("==============================================\n");
   } catch (e) {
     pareando = false;
     E.setErroConexao(e?.message || String(e));
     console.error("[pareamento] falha ao gerar codigo:", e?.message || e);
-    setTimeout(() => pedirPareamento(sock), 10000);
   }
 }
 
@@ -102,16 +105,27 @@ async function avisarDono(sock) {
 }
 
 async function iniciar() {
-  if (iniciando) return;
-  iniciando = true;
+  if (reconectando) return;
+  reconectando = true;
 
-  const forcarPareamento = process.env.NOVO_PAREAMENTO === "1";
-  if (forcarPareamento) arquivarSessao();
+  if (process.env.NOVO_PAREAMENTO === "1" && !sessaoArquivadaNesteBoot) {
+    arquivarSessao();
+    sessaoArquivadaNesteBoot = true;
+    process.env.NOVO_PAREAMENTO = "0";
+  }
 
   const { state, saveCreds } = await useMultiFileAuthState(PASTA_SESSAO);
-  const { version } = await fetchLatestBaileysVersion();
+  let version;
+  try {
+    const latest = await fetchLatestBaileysVersion();
+    version = latest.version;
+  } catch (_) {
+    version = [2, 3000, 1027934701];
+  }
+
   const jaRegistrado = !!state.creds?.registered;
   const historico = new Map();
+  pareando = false;
 
   const sock = makeWASocket({
     version,
@@ -147,7 +161,7 @@ async function iniciar() {
     if (connection === "open") {
       tentativas = 0;
       pareando = false;
-      iniciando = false;
+      reconectando = false;
       const numero = sock.user?.id?.split(":")[0] || DONO_NUMERO;
       E.setConectado(true, numero);
       console.log(`\n[OK] ${NOME_BOT} conectado com sucesso.`);
@@ -156,7 +170,7 @@ async function iniciar() {
     }
 
     if (connection === "close") {
-      iniciando = false;
+      reconectando = false;
       E.setConectado(false);
       const codigo = lastDisconnect?.error?.output?.statusCode;
       const deslogado = codigo === DisconnectReason.loggedOut || codigo === 401 || codigo === 403;
@@ -172,14 +186,14 @@ async function iniciar() {
         setTimeout(iniciar, 2000);
       } else {
         tentativas++;
-        const espera = Math.min(15000, 2000 * tentativas);
-        console.log(`Reconectando em ${espera / 1000}s...`);
+        const espera = Math.min(20000, 3000 * tentativas);
+        console.log(`Reconectando em ${espera / 1000}s (mesmo codigo/sessao)...`);
         setTimeout(iniciar, espera);
       }
     }
   });
 
-  sock.ev.on("messages.upsert", async ({ messages, type }) => {
+  sock.ev.on("messages.upsert", async ({ messages }) => {
     for (const msg of messages) {
       try {
         if (msg?.key?.id && msg.message) {
@@ -194,7 +208,7 @@ async function iniciar() {
           || msg?.message?.ephemeralMessage?.message?.conversation
           || msg?.message?.ephemeralMessage?.message?.extendedTextMessage?.text
           || "";
-        if (texto) console.log(`[msg ${type}] ${msg.key.remoteJid} fromMe=${!!msg.key.fromMe} :: ${String(texto).slice(0, 80)}`);
+        if (texto) console.log(`[msg] ${msg.key.remoteJid} fromMe=${!!msg.key.fromMe} :: ${String(texto).slice(0, 80)}`);
         await tratarMensagem(sock, msg);
       } catch (e) {
         console.error("[erro mensagem]", e?.message || e);
@@ -210,6 +224,7 @@ async function iniciar() {
     }
   });
 
+  reconectando = false;
   return sock;
 }
 

@@ -52,6 +52,16 @@ Depois de conectado, o bot envia uma mensagem no seu WhatsApp avisando que esta 
 
 Repo: https://github.com/angelort77116/bot-whatsapp-pro
 
+## Square Cloud
+
+1. Faca o commit/push deste repositorio (ja configurado).
+2. No Square Cloud, importe o GitHub `angelort77116/bot-whatsapp-pro`.
+3. O arquivo `squarecloud.app` ja esta pronto (512 MB, Node, autorestart).
+4. Suba a aplicacao e abra os **logs**.
+5. Copie o **CODIGO DE PAREAMENTO** que aparecer nos logs.
+6. No WhatsApp: Aparelhos conectados > Conectar um aparelho > Conectar com numero de telefone > cole o codigo.
+7. Depois de conectar, a pasta `sessao/` fica no servidor. Nao apague. Nao use `NOVO_PAREAMENTO=1` no Square Cloud.
+
 ## Como adicionar um grupo
 
 1. Adicione o bot no grupo (o bot roda no seu numero).

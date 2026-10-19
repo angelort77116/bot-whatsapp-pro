@@ -1,0 +1,7 @@
+node_modules
+sessao
+sessao-antiga-*
+dados
+.git
+*.log
+.env
